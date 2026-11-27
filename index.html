@@ -307,6 +307,7 @@
   var step=0;
   document.addEventListener('click',function(e){
     if(e.target.tagName==='BUTTON')return;
+    if(cur.id!=='s1')return;
     if(!typing){ step++; if(step===1)go('s2'); else if(step===2)go('s3'); }
   });
 
@@ -331,9 +332,11 @@
   no.addEventListener('touchstart',function(e){e.preventDefault();run();},{passive:false});
   no.addEventListener('click',function(e){e.preventDefault();run();});
 
+  var s4ReadyAt=0;
   yes.addEventListener('click',function(){
     for(var i=0;i<70;i++)hearts.push(newHeart(true));
     go('s4');
+    s4ReadyAt=Date.now()+2500;
     var s4=document.getElementById('s4');
     s4.querySelectorAll('.big,.lines,.sig').forEach(function(el,i){
       el.style.opacity=0;el.style.animation='none';
@@ -503,6 +506,8 @@
 
   /* ---------- 入口：答应之后继续 ---------- */
   document.getElementById('s4').addEventListener('click',function(){
+    if(Date.now()<s4ReadyAt)return;
+    s4ReadyAt=Infinity;
     stat.right=0;stat.q=0;stat.g1=stat.g2=stat.g3=false;
     renderQ();go('s5');
   });
