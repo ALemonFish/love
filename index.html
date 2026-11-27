@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>睡前有句话想说</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:#0a0510}
+  body{
+    font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    user-select:none;
+  }
+  #bg{position:fixed;inset:0;z-index:0}
+  #glow{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(circle at 50% 40%,rgba(255,86,140,.22),transparent 60%),
+               radial-gradient(circle at 20% 80%,rgba(120,80,255,.18),transparent 55%);
+  }
+  .screen{
+    position:absolute;inset:0;z-index:2;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:0 28px;text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .9s ease, transform .9s ease;
+    transform:translateY(18px);
+  }
+  .screen.on{opacity:1;pointer-events:auto;transform:translateY(0)}
+  #s1 p{
+    font-size:20px;line-height:2;letter-spacing:.06em;color:#f6e6f0;
+    min-height:9.6em;display:flex;align-items:center;justify-content:center;
+  }
+  .cursor{
+    display:inline-block;width:2px;height:1.1em;background:#ff7ba9;
+    margin-left:2px;vertical-align:-.18em;animation:blink .8s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+  #hint{
+    position:absolute;bottom:12%;left:0;right:0;text-align:center;
+    font-size:13px;color:rgba(255,255,255,.4);letter-spacing:.3em;
+    opacity:0;transition:opacity .6s;animation:float 2.4s ease-in-out infinite;
+  }
+  #hint.on{opacity:1}
+  @keyframes float{50%{transform:translateY(-8px)}}
+
+  #s2 h1{
+    font-size:26px;line-height:1.9;font-weight:600;letter-spacing:.02em;
+    background:linear-gradient(100deg,#ffd6e6,#ff7ba9 45%,#ffd08a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 18px rgba(255,110,150,.35));
+  }
+  #s2 .sub{margin-top:22px;font-size:14px;line-height:2;color:rgba(255,255,255,.55)}
+  #s2 .date{margin-top:34px;font-size:12px;letter-spacing:.32em;color:rgba(255,255,255,.28)}
+
+  #s3 .ask{
+    font-size:23px;font-weight:600;letter-spacing:.04em;line-height:1.8;
+  }
+  #s3 .body{margin-top:18px;font-size:14px;line-height:2.1;color:rgba(255,255,255,.6)}
+  .btns{margin-top:44px;display:flex;gap:18px;align-items:center;justify-content:center}
+  button{
+    font-family:inherit;font-size:16px;border:none;border-radius:999px;
+    padding:14px 34px;letter-spacing:.08em;
+    transition:transform .18s ease, box-shadow .25s ease, opacity .2s;
+  }
+  #yes{
+    background:linear-gradient(135deg,#ff5f8f,#ff9a6c);color:#fff;font-weight:600;
+    box-shadow:0 8px 30px rgba(255,90,140,.45);
+  }
+  #yes:active{transform:scale(.94)}
+  #no{
+    background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);
+    position:relative;
+  }
+  #s3 .tiny{margin-top:26px;font-size:11px;color:rgba(255,255,255,.22);letter-spacing:.12em}
+
+  #s4 .big{
+    font-size:30px;font-weight:700;line-height:1.7;
+    background:linear-gradient(100deg,#fff,#ffc0d6 50%,#ffd08a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 22px rgba(255,120,160,.5));
+  }
+  #s4 .lines{margin-top:26px;font-size:14px;line-height:2.2;color:rgba(255,255,255,.62)}
+  #s4 .sig{margin-top:38px;font-size:12px;letter-spacing:.3em;color:rgba(255,255,255,.3)}
+  #s4 .heart{font-size:52px;margin-bottom:26px;animation:beat 1.3s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.16)}28%{transform:scale(1)}42%{transform:scale(1.12)}70%{transform:scale(1)}}
+  .fade{animation:fadeUp .9s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="glow"></div>
+
+<div class="screen on" id="s1">
+  <p><span id="tw"></span><span class="cursor"></span></p>
+  <div id="hint">轻触屏幕继续</div>
+</div>
+
+<div class="screen" id="s2">
+  <h1>有些话<br>憋了很久了</h1>
+  <div class="sub">不是一时冲动，<br>是很多个想找你说说话的瞬间攒下来的。</div>
+  <div class="date">2026 · 冬</div>
+</div>
+
+<div class="screen" id="s3">
+  <div class="ask">你愿意<br>让我认真喜欢你吗</div>
+  <div class="body">以后你的开心我陪，<br>不开心我也在。</div>
+  <div class="btns">
+    <button id="yes">愿意</button>
+    <button id="no">再想想</button>
+  </div>
+  <div class="tiny" id="tiny">（第二个按钮有点滑）</div>
+</div>
+
+<div class="screen" id="s4">
+  <div class="heart">♥</div>
+  <div class="big">那我就当你答应啦</div>
+  <div class="lines">
+    这句话存了很久，今天终于发出来了。<br>
+    慢慢来，我不着急，也可以先做朋友。<br>
+    但我会一直在。
+  </div>
+  <div class="sig">— 想了一个冬天的人</div>
+</div>
+
+<script>
+(function(){
+  var W=innerWidth,H=innerHeight,dpr=Math.min(devicePixelRatio||1,2);
+  var cv=document.getElementById('bg'),ctx=cv.getContext('2d');
+  function resize(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();addEventListener('resize',resize);
+
+  // 星点
+  var stars=[];
+  for(var i=0;i<70;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.3,a:Math.random()*.6+.15,s:Math.random()*.15+.03});
+  // 爱心
+  var hearts=[];
+  function newHeart(burst){
+    return {
+      x:burst?W/2+(Math.random()-.5)*W*.9:Math.random()*W,
+      y:burst?H*.6+Math.random()*40:H+20+Math.random()*H*.3,
+      size:burst?Math.random()*14+8:Math.random()*9+5,
+      vy:burst?-(Math.random()*1.6+.7):-(Math.random()*.7+.25),
+      vx:(Math.random()-.5)*.55,
+      rot:(Math.random()-.5)*.9,
+      life:1,decay:burst?.0022:.0011,
+      hue:Math.random()*40+330
+    };
+  }
+  function heartPath(s){
+    ctx.beginPath();
+    ctx.moveTo(0,s*.35);
+    ctx.bezierCurveTo(-s*.5,-s*.15,-s*.9,s*.35,0,s);
+    ctx.bezierCurveTo(s*.9,s*.35,s*.5,-s*.15,0,s*.35);
+    ctx.closePath();
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<stars.length;i++){var st=stars[i];st.a+=st.s;var al=.15+Math.abs(Math.sin(st.a))*.5;
+      ctx.beginPath();ctx.arc(st.x,st.y,st.r,0,6.284);ctx.fillStyle='rgba(255,255,255,'+al+')';ctx.fill();}
+    if(Math.random()<0.035 && hearts.length<90)hearts.push(newHeart(false));
+    for(var j=hearts.length-1;j>=0;j--){
+      var h=hearts[j];h.x+=h.vx;h.y+=h.vy;h.life-=h.decay;
+      if(h.life<=0||h.y<-40){hearts.splice(j,1);continue;}
+      ctx.save();ctx.translate(h.x,h.y);ctx.rotate(h.rot);
+      ctx.globalAlpha=h.life*.42;
+      ctx.shadowBlur=12;ctx.shadowColor='hsla('+h.hue+',90%,65%,.8)';
+      ctx.fillStyle='hsla('+h.hue+',92%,70%,1)';
+      heartPath(h.size);ctx.fill();ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // 屏幕切换
+  var cur=document.getElementById('s1');
+  function go(id){
+    var n=document.getElementById(id);
+    if(!n||n===cur)return;
+    cur.classList.remove('on');n.classList.add('on');cur=n;
+  }
+
+  // 打字机
+  var lines=[
+    '有些话\n我在心里练了很多遍',
+    '今天\n不想再咽回去了'
+  ];
+  var tw=document.getElementById('tw'),hint=document.getElementById('hint');
+  var li=0,ci=0,typing=true;
+  function type(){
+    if(li>=lines.length){typing=false;hint.classList.add('on');return;}
+    var txt=lines[li];
+    tw.innerHTML=txt.slice(0,ci).replace(/\n/g,'<br>');
+    if(ci<txt.length){ci++;setTimeout(type,txt[ci-1]==='\n'?380:120);}
+    else{setTimeout(function(){li++;ci=0;tw.style.opacity=0;
+      setTimeout(function(){tw.style.opacity=1;type();},420);},1500);}
+  }
+  tw.style.transition='opacity .4s';
+  setTimeout(type,600);
+
+  var step=0;
+  document.addEventListener('click',function(e){
+    if(e.target.tagName==='BUTTON')return;
+    if(!typing){ step++; if(step===1)go('s2'); else if(step===2)go('s3'); }
+  });
+
+  // 点第一屏也能跳
+  document.getElementById('s2').addEventListener('click',function(){go('s3')});
+
+  // 再想想：躲
+  var no=document.getElementById('no'),yes=document.getElementById('yes');
+  var dodge=0,tips=['（第二个按钮有点滑）','（它又跑了）','（真的不考虑一下吗）','（算了，它投降了）'];
+  function run(){
+    dodge++;
+    var r=no.getBoundingClientRect();
+    var dx=(Math.random()-.5)*220, dy=(Math.random()-.5)*160;
+    if(dodge>=4){
+      no.style.transform='none';no.textContent='也愿意';no.style.opacity='.55';
+      return;
+    }
+    no.style.transform='translate('+dx+'px,'+dy+'px)';
+    document.getElementById('tiny').textContent=tips[Math.min(dodge,tips.length-1)];
+  }
+  no.addEventListener('mouseenter',run);
+  no.addEventListener('touchstart',function(e){e.preventDefault();run();},{passive:false});
+  no.addEventListener('click',function(e){e.preventDefault();run();});
+
+  yes.addEventListener('click',function(){
+    for(var i=0;i<70;i++)hearts.push(newHeart(true));
+    go('s4');
+    var s4=document.getElementById('s4');
+    s4.querySelectorAll('.big,.lines,.sig').forEach(function(el,i){
+      el.style.opacity=0;el.style.animation='none';
+      setTimeout(function(){el.classList.add('fade');el.style.opacity='';},260*i+120);
+    });
+  });
+})();
+</script>
+</body>
+</html>
