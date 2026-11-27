@@ -79,10 +79,46 @@
   #s4 .sig{margin-top:34px;font-size:12px;letter-spacing:.3em;color:rgba(255,255,255,.3)}
   #s4 .heart{font-size:52px;margin-bottom:26px;animation:beat 1.3s ease-in-out infinite}
   @keyframes beat{0%,100%{transform:scale(1)}18%{transform:scale(1.14)}36%{transform:scale(.98)}54%{transform:scale(1.08)}}
+
+  #s4 .reply{
+    margin-top:28px;width:100%;max-width:360px;padding:16px 18px;border-radius:18px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,158,193,.28);
+    font-size:14px;line-height:1.9;color:#ffd6e6;opacity:0;transform:translateY(10px);
+    transition:opacity .7s ease .4s,transform .7s ease .4s;
+  }
+  #s4 .reply.on{opacity:1;transform:translateY(0)}
+  #s4 .reply .cap{font-size:11px;letter-spacing:.24em;color:rgba(255,255,255,.35);margin-bottom:10px}
+  #s4 .reply .txt{font-weight:600;font-size:15px}
+  #s4 .rbtns{margin-top:16px;display:flex;gap:10px;justify-content:center}
+  #s4 .rbtns button{padding:10px 20px;font-size:14px;border-radius:999px;
+    background:linear-gradient(135deg,#ff5f8f,#ff9a6c);color:#fff;font-weight:600}
+  #s4 .rbtns button.ghost{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);font-weight:400}
+  #s4 .rtip{margin-top:12px;font-size:11px;color:rgba(255,255,255,.32);letter-spacing:.06em}
+  #lock{
+    position:fixed;inset:0;z-index:9;display:none;align-items:center;justify-content:center;
+    background:rgba(10,5,16,.94);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    text-align:center;padding:0 30px;flex-direction:column;
+  }
+  #lock.on{display:flex}
+  #lock .t{font-size:20px;font-weight:600;line-height:1.9;color:#ffd6e6}
+  #lock .s{margin-top:14px;font-size:13px;color:rgba(255,255,255,.45);line-height:2}
+  #lock .b{margin-top:26px;display:flex;gap:12px;justify-content:center}
+  #lock button{padding:12px 26px;font-size:15px;border-radius:999px;
+    background:linear-gradient(135deg,#ff5f8f,#ff9a6c);color:#fff;font-weight:600}
+  #lock button.ghost{background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);font-weight:400}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
+<div id="lock">
+  <div class="t">还没回答呢</div>
+  <div class="s" id="lockSub">把这一屏看完再走，好吗</div>
+  <div class="b">
+    <button id="lockBack">回去看</button>
+    <button id="lockQuit" class="ghost">真的要走</button>
+  </div>
+</div>
+
 <div id="glow"></div>
 
 <div class="screen on" id="s1">
@@ -115,6 +151,15 @@
     但我会一直在。
   </div>
   <div class="sig">— 南晓硕，等你的回话</div>
+  <div class="reply" id="reply">
+    <div class="cap">已替你拟好回信</div>
+    <div class="txt" id="replyTxt">我愿意</div>
+    <div class="rbtns">
+      <button id="sendBack">发给他</button>
+      <button id="copyBack" class="ghost">复制</button>
+    </div>
+    <div class="rtip">点「发给他」会打开短信，按一下发送就行</div>
+  </div>
 </div>
 
 <script>
@@ -170,8 +215,48 @@
     no.style.transform='translate('+dx+'px,'+dy+'px)';
   });
   yes.addEventListener('click',function(e){
-    e.stopPropagation();step=3;go('s4');
+    e.stopPropagation();step=3;go('s4');agreed=true;
+    setTimeout(function(){Q('reply').classList.add('on')},700);
   });
+
+  var agreed=false,lockQ='15838240325';
+  var REPLY_TXT='我愿意';
+  Q('replyTxt').textContent=REPLY_TXT;
+
+  document.getElementById('sendBack').addEventListener('click',function(e){
+    e.stopPropagation();
+    location.href='sms:'+lockQ+'?body='+encodeURIComponent(REPLY_TXT);
+  });
+  document.getElementById('copyBack').addEventListener('click',function(e){
+    e.stopPropagation();
+    var t=REPLY_TXT;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t)}
+    else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);
+      ta.select();try{document.execCommand('copy')}catch(err){}document.body.removeChild(ta)}
+    Q('copyBack').textContent='已复制';
+  });
+
+  var lockEl=Q('lock'),lockSub=Q('lockSub'),backTry=0;
+  function showLock(msg){
+    if(msg)lockSub.textContent=msg;
+    lockEl.classList.add('on');
+  }
+  Q('lockBack').addEventListener('click',function(){lockEl.classList.remove('on')});
+  Q('lockQuit').addEventListener('click',function(){lockEl.classList.remove('on');history.back()});
+
+  history.pushState({g:1},'');
+  window.addEventListener('popstate',function(){
+    if(agreed)return;
+    backTry++;
+    history.pushState({g:1},'');
+    showLock(backTry===1?'把这一屏看完再走，好吗'
+      :backTry===2?'真的还有一句话没说'
+      :'就一屏，很快的');
+  });
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden&&!agreed&&step===2)showLock('你回来了，还差一个回答');
+  });
+
 })();
 </script>
 </body>
