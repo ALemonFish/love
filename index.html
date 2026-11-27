@@ -500,8 +500,9 @@
 
   /* ---------- 收尾 ---------- */
   function showFinal(){
+    var done=(stat.g1?1:0)+(stat.g2?1:0)+(stat.g3?1:0);
     Q('final').innerHTML='默契 '+stat.right+' / '+QS.length+
-      '　·　小游戏 '+(stat.g1?1:0)+(stat.g2?1:0)+(stat.g3?1:0)+' / 3';
+      '　·　小游戏 '+done+' / 3';
   }
 
   /* ---------- 入口：答应之后继续 ---------- */
