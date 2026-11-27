@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>南晓硕 我喜欢你</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:#0a0510}
+  body{
+    font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:#fff;display:flex;align-items:center;justify-content:center;user-select:none;
+  }
+  #bg{position:fixed;inset:0;z-index:0}
+  #glow{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(circle at 50% 40%,rgba(255,86,140,.22),transparent 60%),
+               radial-gradient(circle at 20% 80%,rgba(120,80,255,.18),transparent 55%);
+  }
+  .screen{
+    position:absolute;inset:0;z-index:2;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:0 28px;text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .9s ease,transform .9s ease;
+    transform:translateY(18px);
+  }
+  .screen.on{opacity:1;pointer-events:auto;transform:translateY(0)}
+  #s1 p{
+    font-size:20px;line-height:2;letter-spacing:.06em;color:#f6e6f0;
+    min-height:9.6em;display:flex;align-items:center;justify-content:center;
+    white-space:pre-wrap;
+  }
+  .cursor{
+    display:inline-block;width:2px;height:1.1em;background:#ff7ba9;
+    margin-left:2px;vertical-align:-.18em;animation:blink .8s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+  #hint{
+    position:absolute;bottom:12%;left:0;right:0;text-align:center;
+    font-size:13px;color:rgba(255,255,255,.4);letter-spacing:.3em;
+    opacity:0;transition:opacity .6s;animation:float 2.4s ease-in-out infinite;
+  }
+  #hint.on{opacity:1}
+  @keyframes float{50%{transform:translateY(-8px)}}
+
+  #s2 h1{
+    font-size:27px;line-height:1.9;font-weight:600;letter-spacing:.02em;
+    background:linear-gradient(100deg,#ffd6e6,#ff7ba9 45%,#ffd08a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 18px rgba(255,110,150,.35));
+  }
+  #s2 .sub{margin-top:22px;font-size:14px;line-height:2;color:rgba(255,255,255,.55)}
+  #s2 .date{margin-top:34px;font-size:12px;letter-spacing:.32em;color:rgba(255,255,255,.28)}
+
+  #s3 .ask{font-size:23px;font-weight:600;letter-spacing:.04em;line-height:1.8}
+  #s3 .body{margin-top:18px;font-size:14px;line-height:2.1;color:rgba(255,255,255,.6)}
+  .btns{margin-top:44px;display:flex;gap:18px;align-items:center;justify-content:center}
+  button{
+    font-family:inherit;font-size:16px;border:none;border-radius:999px;
+    padding:14px 34px;letter-spacing:.08em;
+    transition:transform .18s ease,box-shadow .25s ease,opacity .2s;
+  }
+  #yes{
+    background:linear-gradient(135deg,#ff5f8f,#ff9a6c);color:#fff;font-weight:600;
+    box-shadow:0 8px 30px rgba(255,90,140,.45);
+  }
+  #yes:active{transform:scale(.94)}
+  #no{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);position:relative}
+  #s3 .tiny{margin-top:26px;font-size:11px;color:rgba(255,255,255,.22);letter-spacing:.12em}
+
+  #s4 .big{
+    font-size:30px;font-weight:700;line-height:1.7;
+    background:linear-gradient(100deg,#fff,#ffc0d6 50%,#ffd08a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 20px rgba(255,140,170,.4));
+  }
+  #s4 .lines{margin-top:26px;font-size:14px;line-height:2.2;color:rgba(255,255,255,.62)}
+  #s4 .sig{margin-top:34px;font-size:12px;letter-spacing:.3em;color:rgba(255,255,255,.3)}
+  #s4 .heart{font-size:52px;margin-bottom:26px;animation:beat 1.3s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}18%{transform:scale(1.14)}36%{transform:scale(.98)}54%{transform:scale(1.08)}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="glow"></div>
+
+<div class="screen on" id="s1">
+  <p><span id="tw"></span><span class="cursor"></span></p>
+  <div id="hint">轻触屏幕继续</div>
+</div>
+
+<div class="screen" id="s2">
+  <h1>南晓硕<br>我喜欢你</h1>
+  <div class="sub">不是一时冲动，<br>是很多个想跟你说说话的瞬间攒下来的。</div>
+  <div class="date">写给你的</div>
+</div>
+
+<div class="screen" id="s3">
+  <div class="ask">你愿意<br>让我认真喜欢你吗</div>
+  <div class="body">以后你的开心我陪，<br>不开心我也在。</div>
+  <div class="btns">
+    <button id="yes">愿意</button>
+    <button id="no">再想想</button>
+  </div>
+  <div class="tiny" id="tiny">（第二个按钮有点滑）</div>
+</div>
+
+<div class="screen" id="s4">
+  <div class="heart">♥</div>
+  <div class="big">那我就当你答应啦</div>
+  <div class="lines">
+    这句话存了很久，今天终于发出来了。<br>
+    慢慢来，我不着急，也可以先做朋友。<br>
+    但我会一直在。
+  </div>
+  <div class="sig">— 南晓硕，等你的回话</div>
+</div>
+
+<script>
+(function(){
+  function Q(id){return document.getElementById(id)}
+  var cv=Q('bg'),cx=cv.getContext('2d'),W=0,H=0,ps=[];
+  function size(){W=cv.width=innerWidth;H=cv.height=innerHeight}
+  size();addEventListener('resize',size);
+  for(var i=0;i<46;i++)ps.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.9+.6,
+    vy:-(Math.random()*.4+.12),a:Math.random()*.5+.12,c:Math.random()<.5?'255,140,180':'190,160,255'});
+  function draw(){
+    cx.clearRect(0,0,W,H);
+    for(var i=0;i<ps.length;i++){var p=ps[i];
+      p.y+=p.vy;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
+      cx.beginPath();cx.arc(p.x,p.y,p.r,0,6.283);
+      cx.fillStyle='rgba('+p.c+','+p.a+')';cx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  var lines=['南晓硕，\n有句话憋了挺久。','想跟你说说话，\n不挑时间那种。'];
+  var li=0,ci=0,tw=Q('tw'),typing=false,typed=false;
+  function typeLine(){
+    if(li>=lines.length){typed=true;Q('hint').classList.add('on');return}
+    var s=lines[li];
+    if(ci<s.length){tw.textContent+=s.charAt(ci++);setTimeout(typeLine,90)}
+    else{li++;ci=0;setTimeout(function(){tw.textContent+='\n';typeLine()},420)}
+  }
+  setTimeout(typeLine,600);
+
+  var step=0;
+  function go(id){
+    var all=document.querySelectorAll('.screen');
+    for(var i=0;i<all.length;i++)all[i].classList.remove('on');
+    Q(id).classList.add('on');
+  }
+  document.addEventListener('click',function(){
+    if(step!==0)return;
+    if(!typed)return;
+    step=1;go('s2');
+    setTimeout(function(){step=2;go('s3')},2600);
+  });
+
+  var noN=0,no=Q('no'),yes=Q('yes'),tiny=Q('tiny');
+  var texts=['再想想','真的不再想想？','好吧…想想吧','不愿意也没关系','那…也愿意吧'];
+  no.addEventListener('click',function(e){
+    e.stopPropagation();noN++;
+    if(noN>=4){no.textContent='也愿意';no.style.background='rgba(255,95,143,.22)';tiny.textContent='（它自己改主意了）';return}
+    no.textContent=texts[noN];
+    var dx=(Math.random()<.5?-1:1)*(60+Math.random()*90);
+    var dy=(Math.random()<.5?-1:1)*(30+Math.random()*60);
+    no.style.transform='translate('+dx+'px,'+dy+'px)';
+  });
+  yes.addEventListener('click',function(e){
+    e.stopPropagation();step=3;go('s4');
+  });
+})();
+</script>
+</body>
+</html>
