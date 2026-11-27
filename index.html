@@ -357,7 +357,7 @@
   var QS=[
     {q:'我一般什么时候最想你',
      o:['晚上躺下、手机放一边的时候','忙得脚不沾地的时候','看到别人成双的时候'],
-     a:0,f:'猜对了。灯一关，脑子就开始不听话。'},
+     a:0,f:'灯一关，脑子就开始不听话。'},
     {q:'我发消息之前通常会',
      o:['想到什么直接发','删删改改好几遍才发出去','攒一堆，最后一句都没发'],
      a:1,f:'每次打完都要读两遍，怕太热情，也怕太冷淡。'},
@@ -380,7 +380,7 @@
         var nodes=box.children;
         nodes[it.a].classList.add('right');
         if(i===it.a){stat.right++;}else{nodes[i].classList.add('wrong');}
-        fb.textContent=(i===it.a?'猜对了。':'没关系，答案是「'+it.o[it.a]+'」。')+it.f;
+        fb.textContent=(i===it.a?'这题对了。':'这题不对，答案是「'+it.o[it.a]+'」。')+it.f;
         fb.classList.add('on');
         setTimeout(function(){
           stat.q++;box.dataset.lock='';
